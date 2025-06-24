@@ -30,7 +30,8 @@ This Streamlit-based tool lets EPC project engineers, site planners, and SCM tea
 
 ## 📸 Screenshot
 
-<img src="https://i.imgur.com/6vZ0NSU.png" alt="Artson Vehicle Selector Screenshot" width="700"/>
+<img src="vehicle-selector-screenshot.png" alt="Artson Vehicle Selector Screenshot" width="700"/>
+
 
 ---
 
