@@ -96,7 +96,6 @@ cargo_type = st.selectbox("📦 Cargo Type", [
     "Control Panel",
     "Pipeline",
     "Rotating Machinery",
-    "Hazardous Material",
     "Fragile Custom Assembly"
 ])
 
