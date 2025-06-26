@@ -3,7 +3,7 @@ import pandas as pd
 import altair as alt
 
 st.set_page_config(
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="expanded",
     page_title="Vehicle Selector – Artson",
     page_icon="🚚"
