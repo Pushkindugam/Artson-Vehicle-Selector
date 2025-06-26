@@ -2,6 +2,13 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 
+st.set_page_config(
+    layout="wide",
+    initial_sidebar_state="expanded",
+    page_title="Vehicle Selector – Artson",
+    page_icon="🚚"
+)
+
 # 🚚 Full vehicle reference table (EPC)
 vehicle_types = [
     {"name": "LCV Truck (Light Commercial Vehicle)", "max_length": 4.2, "max_width": 2.0, "max_height": 2.2, "max_weight": 3},
