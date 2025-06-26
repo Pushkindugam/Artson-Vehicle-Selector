@@ -118,10 +118,14 @@ if st.button("🔍 Recommend Vehicle"):
         chart = alt.Chart(bar_data).mark_bar().encode(
             y=alt.Y("Parameter:N", sort=None),
             x=alt.X("Percentage:Q", stack="normalize"),
-            color=alt.Color("Type:N", scale=alt.Scale(
-                domain=["Utilization (%)", "Remaining (%)"],
-                range=["#1f77b4", "#d3d3d3"]
-            )),
+            color=alt.Color("Type:N",
+    scale=alt.Scale(
+        domain=["Utilization (%)", "Remaining (%)"],
+        range=["#1f77b4", "#d3d3d3"]
+    ),
+    sort=["Utilization (%)", "Remaining (%)"]  # 👈 ensures blue is left
+)
+,
             tooltip=["Type", "Percentage"]
         ).properties(
             width=600,
