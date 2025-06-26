@@ -81,9 +81,32 @@ weight = st.number_input("⚖️ Cargo Weight (tonnes)", value=10.0, step=0.1)
 # 🧾 Additional Cargo Inputs
 st.markdown("### 📋 Cargo Details")
 cargo_type = st.selectbox("📦 Type of Cargo", ["Machinery", "Steel Structure", "Electrical Equipment", "Liquid", "Hazardous", "Other"])
-is_fragile = st.checkbox("🧴 Fragile Item?", value=False)
-needs_packaging = st.checkbox("🎁 Packaging Required?", value=True)
+
+# Fragility Level
+fragility = st.selectbox("🧱 Fragility", ["No", "Yes - Needs cushioning", "Very Fragile - Handle with care"])
+
+# Packaging Requirement
+packaging_needed = st.checkbox("🎁 Is Packaging Required?", value=True)
+
+# Packaging Suggestion based on fragility
+packaging_suggestion = None
+packaging_options = ["Not Needed", "Wooden Crate", "Shrink Wrap", "Bubble Wrap", "Custom Industrial Packing"]
+
+if packaging_needed:
+    if fragility == "No":
+        packaging_suggestion = "Shrink Wrap"
+    elif fragility == "Yes - Needs cushioning":
+        packaging_suggestion = "Bubble Wrap"
+    elif fragility == "Very Fragile - Handle with care":
+        packaging_suggestion = "Custom Industrial Packing"
+
+    packaging = st.selectbox("📦 Select Packaging Type", packaging_options, index=packaging_options.index(packaging_suggestion))
+else:
+    packaging = "Not Needed"
+
+# Special Handling
 handling_instructions = st.text_input("🛠️ Special Handling Instructions", placeholder="e.g. Handle with crane, avoid vibration, etc.")
+
 
 # 🔍 Run matching
 if st.button("🔍 Recommend Vehicle"):
