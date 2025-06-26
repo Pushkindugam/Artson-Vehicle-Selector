@@ -19,6 +19,16 @@ This Streamlit-powered tool allows **project engineers**, **site planners**, and
 
 ---
 
+## 📸 Screenshots
+
+### 🔧 Input Interface  
+![Input Screenshot](V-S-input-screenshot.png)
+
+### 📦 Output Recommendations  
+![Output Screenshot](V-S-output-screenshot.png)
+
+---
+
 ## 🛠️ Features
 
 | Feature                          | Description                                                                 |
@@ -32,15 +42,3 @@ This Streamlit-powered tool allows **project engineers**, **site planners**, and
 | 🌐 Streamlit UI                   | Deployed online; works instantly without login                              |
 
 ---
-
-## 📸 Screenshots
-
-### 🔧 Input Interface  
-![Input Screenshot](V-S-input-screenshot.png)
-
-### 📦 Output Recommendations  
-![Output Screenshot](V-S-output-screenshot.png)
-
----
-
-
