@@ -2,35 +2,12 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 
-git add artson_logo.png
-git commit -m "Add logo"
-git push origin main
-
-
 st.set_page_config(
     layout="centered",
     initial_sidebar_state="expanded",
     page_title="Vehicle Selector – Artson",
     page_icon="🚚"
 )
-
-# 🔽 Add this banner code immediately after set_page_config
-st.markdown("""
-    <style>
-        .banner {
-            background-image: url('artson_logo.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center top;
-            height: 120px;
-            margin-bottom: 10px;
-        }
-        .block-container {
-            padding-top: 0rem;
-        }
-    </style>
-    <div class="banner"></div>
-""", unsafe_allow_html=True)
 
 # 🚚 Full vehicle reference table (EPC)
 vehicle_types = [
