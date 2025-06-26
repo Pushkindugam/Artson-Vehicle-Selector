@@ -78,6 +78,36 @@ width = st.number_input("📐 Cargo Width (m)", value=2.5, step=0.1)
 height = st.number_input("📦 Cargo Height (m)", value=2.5, step=0.1)
 weight = st.number_input("⚖️ Cargo Weight (tonnes)", value=10.0, step=0.1)
 
+# 📦 Cargo Type & Handling Requirements
+cargo_type = st.selectbox("📦 Cargo Type", [
+    "Standard Steel Fabrication",
+    "Precision Instrument",
+    "Glass Equipment",
+    "Control Panel",
+    "Pipeline",
+    "Rotating Machinery",
+    "Hazardous Material",
+    "Fragile Custom Assembly"
+])
+
+# Define rules for fragility and packaging
+fragile_items = {
+    "Precision Instrument": "Bubble Wrap + Custom Crating",
+    "Glass Equipment": "Wooden Crate + Shock Absorbers",
+    "Control Panel": "Shrink Wrap + Cushioning",
+    "Rotating Machinery": "Custom Industrial Packing",
+    "Fragile Custom Assembly": "Bubble Wrap + Wooden Crate"
+}
+
+is_fragile = cargo_type in fragile_items
+packaging_suggestion = fragile_items.get(cargo_type, "Not Needed")
+
+if is_fragile:
+    st.warning("⚠️ This cargo is **fragile** and requires **special packaging**.")
+    st.markdown(f"**📦 Suggested Packaging:** `{packaging_suggestion}`")
+else:
+    st.info("✅ This cargo is **non-fragile** and does **not** require special packaging.")
+
 
 # 🔍 Run matching
 if st.button("🔍 Recommend Vehicle"):
