@@ -135,7 +135,7 @@ with st.expander(":books: View All Vehicle Types"):
 with st.sidebar:
     st.markdown("### 📃 ODC Limits (CMVR)")
     st.write(ODC_LIMITS)
-    st.markdown("---")
+    st.markdown("------")
     st.caption(":wrench: Built by Artson SCM Team – 2025")
 
 
