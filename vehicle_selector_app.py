@@ -1,4 +1,6 @@
 import streamlit as st
+import pandas as pd
+import altair as alt
 
 # 🚚 Full vehicle reference table (EPC)
 vehicle_types = [
@@ -16,10 +18,10 @@ vehicle_types = [
 
 # 🚨 Standard limits as per CMVR (Beyond this = ODC)
 ODC_LIMITS = {
-    "length": 12.0,   # meters
-    "width": 2.6,     # meters
-    "height": 3.8,    # meters
-    "weight": 40      # tonnes (approx)
+    "length": 12.0,
+    "width": 2.6,
+    "height": 3.8,
+    "weight": 40
 }
 
 def check_odc(length, width, height, weight):
@@ -43,6 +45,24 @@ def select_vehicle_type(length_m, width_m, height_m, weight_tonnes):
             return vehicle["name"]
     return "Custom/Heavy Haulage Required (Contact Transport Planner)"
 
+def get_vehicle_specs(name):
+    for v in vehicle_types:
+        if v["name"] == name:
+            return v
+    return None
+
+def classify_vehicle(name):
+    if "LCV" in name or "14 ft" in name:
+        return "🟢 Light Commercial"
+    elif "22 ft" in name or "Container" in name or "Tanker" in name:
+        return "🟡 Medium Duty"
+    elif "Flatbed" in name or "Low Bed" in name:
+        return "🟠 Heavy Duty"
+    elif "Multi-Axle" in name:
+        return "🔴 Oversize Modular"
+    else:
+        return "🔧 Custom Haulage"
+
 # 🧱 UI
 st.title("🚚 Vehicle Recommendation Tool – Artson Logistics")
 st.markdown("""
@@ -63,7 +83,40 @@ weight = st.number_input("⚖️ Cargo Weight (tonnes)", value=10.0, step=0.1)
 if st.button("🔍 Recommend Vehicle"):
     vehicle = select_vehicle_type(length, width, height, weight)
     st.success(f"✅ **Recommended Vehicle Type:** {vehicle}")
+    st.markdown(f"**Class:** {classify_vehicle(vehicle)}")
 
+    specs = get_vehicle_specs(vehicle)
+    if specs:
+        st.markdown("### 📊 Vehicle Specifications:")
+        st.table({
+            "Max Length (m)": [specs["max_length"]],
+            "Max Width (m)": [specs["max_width"]],
+            "Max Height (m)": [specs["max_height"]],
+            "Max Weight (t)": [specs["max_weight"]]
+        })
+
+        # Optional: Input vs Capacity Bar Chart
+        data = pd.DataFrame({
+            'Parameter': ['Length', 'Width', 'Height', 'Weight'],
+            'Cargo': [length, width, height, weight],
+            'Vehicle Capacity': [
+                specs["max_length"], specs["max_width"], specs["max_height"], specs["max_weight"]
+            ]
+        })
+
+        chart = alt.Chart(data).transform_fold(
+            ['Cargo', 'Vehicle Capacity'],
+            as_=['Type', 'Value']
+        ).mark_bar().encode(
+            x='Parameter:N',
+            y='Value:Q',
+            color='Type:N',
+            tooltip=['Type:N', 'Value:Q']
+        ).properties(width=600)
+
+        st.altair_chart(chart)
+
+    # ODC Alert
     odc_exceeded = check_odc(length, width, height, weight)
     if odc_exceeded:
         st.warning("⚠️ **ODC Alert:** This cargo exceeds standard transport limits and qualifies as **Over Dimensional Cargo (ODC)**.")
@@ -73,6 +126,19 @@ if st.button("🔍 Recommend Vehicle"):
         st.markdown("🔧 Please arrange for **special permits**, route clearance, and escort vehicles.")
     else:
         st.info("📦 This cargo is **within standard CMVR transport limits** and does **not** qualify as ODC.")
+
+# Optional Expandable Reference
+with st.expander("📚 View All Vehicle Types"):
+    st.table(pd.DataFrame(vehicle_types))
+
+# Sidebar
+with st.sidebar:
+    st.markdown("### 📘 ODC Limits (as per CMVR)")
+    st.write(ODC_LIMITS)
+    st.markdown("---")
+    st.markdown("🛠️ Built by Artson SCM Team – 2025")
+
+
 
 
 
@@ -114,6 +180,26 @@ if st.button("🔍 Recommend Vehicle"):
 #     {"name": "Tanker Truck", "max_length": 12, "max_width": 2.5, "max_height": 3.0, "max_weight": 25}
 # ]
 
+# # 🚨 Standard limits as per CMVR (Beyond this = ODC)
+# ODC_LIMITS = {
+#     "length": 12.0,   # meters
+#     "width": 2.6,     # meters
+#     "height": 3.8,    # meters
+#     "weight": 40      # tonnes (approx)
+# }
+
+# def check_odc(length, width, height, weight):
+#     exceeded = {}
+#     if length > ODC_LIMITS["length"]:
+#         exceeded["Length"] = f"{length} m > {ODC_LIMITS['length']} m"
+#     if width > ODC_LIMITS["width"]:
+#         exceeded["Width"] = f"{width} m > {ODC_LIMITS['width']} m"
+#     if height > ODC_LIMITS["height"]:
+#         exceeded["Height"] = f"{height} m > {ODC_LIMITS['height']} m"
+#     if weight > ODC_LIMITS["weight"]:
+#         exceeded["Weight"] = f"{weight} t > {ODC_LIMITS['weight']} t"
+#     return exceeded
+
 # def select_vehicle_type(length_m, width_m, height_m, weight_tonnes):
 #     for vehicle in vehicle_types:
 #         if (length_m <= vehicle["max_length"] and
@@ -129,6 +215,8 @@ if st.button("🔍 Recommend Vehicle"):
 # This tool helps select the **most suitable vehicle** for transporting project cargo based on:
 # - Length × Width × Height (in meters)
 # - Weight (in tonnes)
+
+# It also checks if the cargo qualifies as **ODC (Over Dimensional Cargo)** as per CMVR rules.
 # """)
 
 # # 📥 Inputs
@@ -141,3 +229,38 @@ if st.button("🔍 Recommend Vehicle"):
 # if st.button("🔍 Recommend Vehicle"):
 #     vehicle = select_vehicle_type(length, width, height, weight)
 #     st.success(f"✅ **Recommended Vehicle Type:** {vehicle}")
+
+#     odc_exceeded = check_odc(length, width, height, weight)
+#     if odc_exceeded:
+#         st.warning("⚠️ **ODC Alert:** This cargo exceeds standard transport limits and qualifies as **Over Dimensional Cargo (ODC)**.")
+#         st.markdown("### ❌ Dimensions Exceeding Limits:")
+#         for key, msg in odc_exceeded.items():
+#             st.markdown(f"- **{key}**: {msg}")
+#         st.markdown("🔧 Please arrange for **special permits**, route clearance, and escort vehicles.")
+#     else:
+#         st.info("📦 This cargo is **within standard CMVR transport limits** and does **not** qualify as ODC.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
