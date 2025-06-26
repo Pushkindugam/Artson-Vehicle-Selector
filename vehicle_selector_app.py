@@ -179,12 +179,13 @@ if st.button("🔍 Recommend Vehicle"):
 with st.expander("📚 View All Vehicle Types"):
     st.table(pd.DataFrame(vehicle_types))
 
-# Sidebar
 with st.sidebar:
-    st.markdown("### 📘 ODC Limits (as per CMVR)")
-    st.write(ODC_LIMITS)
+    st.markdown("## 📘 ODC Transport Guidelines")
+    st.json(ODC_LIMITS)
+
     st.markdown("---")
-    st.markdown("🛠️ Built by Artson SCM Team – 2025")
+    st.markdown("### 🛠️ Built by Artson SCM Team – 2025")
+    st.markdown("*by **Pushkin Dugam***")
 
 
 
