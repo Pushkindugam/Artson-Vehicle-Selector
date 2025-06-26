@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 
+git add artson_logo.png
+git commit -m "Add logo"
+git push origin main
+
+
 st.set_page_config(
     layout="centered",
     initial_sidebar_state="expanded",
