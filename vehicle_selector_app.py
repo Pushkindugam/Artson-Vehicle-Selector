@@ -95,24 +95,39 @@ if st.button("🔍 Recommend Vehicle"):
             "Max Weight (t)": [specs["max_weight"]]
         })
 
-        # Optional: Input vs Capacity Bar Chart
-        data = pd.DataFrame({
+        # 📊 Utilization Bar Chart: Cargo as % of Vehicle Capacity
+        utilization_data = pd.DataFrame({
             'Parameter': ['Length', 'Width', 'Height', 'Weight'],
             'Cargo': [length, width, height, weight],
-            'Vehicle Capacity': [
-                specs["max_length"], specs["max_width"], specs["max_height"], specs["max_weight"]
-            ]
+            'Capacity': [specs["max_length"], specs["max_width"], specs["max_height"], specs["max_weight"]]
         })
 
-        chart = alt.Chart(data).transform_fold(
-            ['Cargo', 'Vehicle Capacity'],
-            as_=['Type', 'Value']
-        ).mark_bar().encode(
-            x='Parameter:N',
-            y='Value:Q',
-            color='Type:N',
-            tooltip=['Type:N', 'Value:Q']
-        ).properties(width=600)
+        # Calculate % utilization
+        utilization_data["Utilization (%)"] = (utilization_data["Cargo"] / utilization_data["Capacity"] * 100).round(1)
+        utilization_data["Remaining (%)"] = 100 - utilization_data["Utilization (%)"]
+
+        # Prepare long-form for stacked bar
+        bar_data = utilization_data.melt(
+            id_vars="Parameter",
+            value_vars=["Utilization (%)", "Remaining (%)"],
+            var_name="Type",
+            value_name="Percentage"
+        )
+
+        # Stacked horizontal bar chart
+        chart = alt.Chart(bar_data).mark_bar().encode(
+            y=alt.Y("Parameter:N", sort=None),
+            x=alt.X("Percentage:Q", stack="normalize"),
+            color=alt.Color("Type:N", scale=alt.Scale(
+                domain=["Utilization (%)", "Remaining (%)"],
+                range=["#1f77b4", "#d3d3d3"]
+            )),
+            tooltip=["Type", "Percentage"]
+        ).properties(
+            width=600,
+            height=200,
+            title="🚛 Cargo Fill % of Vehicle Capacity"
+        )
 
         st.altair_chart(chart)
 
