@@ -187,7 +187,8 @@ with st.sidebar:
     st.markdown("### 🛠️ Built by Artson SCM Team – 2025")
     st.markdown("*by **Pushkin Dugam***")
 
-    st.image("artson_logo.png", use_column_width=True, caption="Artson Engineering Ltd.")
+    st.image("artson_logo.png", use_container_width=True, caption="Artson Engineering Ltd.")
+
 
 
 
