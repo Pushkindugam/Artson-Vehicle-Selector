@@ -1,6 +1,6 @@
 # 🚛 Artson Vehicle Selector – EPC Transport Planner
 
-A logistics decision support tool built for **Artson Engineering Ltd.**, this app recommends the **most suitable vehicle type** for transporting project cargo based on its size and weight.
+An intelligent transport logistics assistant for **Artson Engineering Ltd.**, built to assist EPC project teams in selecting the **right vehicle** for cargo transport.
 
 🔗 **Live App:**  
 👉 [https://artson-vehicle-selector-xewufqpfkn32dzkeqlguk5.streamlit.app/](https://artson-vehicle-selector-xewufqpfkn32dzkeqlguk5.streamlit.app/)
@@ -9,11 +9,13 @@ A logistics decision support tool built for **Artson Engineering Ltd.**, this ap
 
 ## 📦 What This Tool Does
 
-This Streamlit-based tool lets EPC project engineers, site planners, and SCM teams:
+This Streamlit-powered tool allows **project engineers**, **site planners**, and **SCM professionals** to:
 
-- Input **cargo dimensions (L×W×H)** and **weight**
-- Instantly see the best vehicle recommendation from a curated list of trailers and trucks
-- Identify if cargo is **ODC (Over Dimensional)** and requires **special planning**
+- Enter **cargo dimensions (Length × Width × Height)** and **weight**
+- Instantly get a **vehicle recommendation** from real EPC transport options
+- Check if the cargo qualifies as **ODC (Over Dimensional Cargo)** under CMVR
+- Get **packaging suggestions** for fragile cargo types
+- Visualize **vehicle capacity utilization**
 
 ---
 
@@ -21,39 +23,52 @@ This Streamlit-based tool lets EPC project engineers, site planners, and SCM tea
 
 | Feature                          | Description                                                                 |
 |----------------------------------|-----------------------------------------------------------------------------|
-| 📐 Dimension & weight input       | User-friendly number inputs in meters and tonnes                            |
-| ⚙️ Intelligent vehicle selection | Matches to real-world truck/trailer specs (LCV, 22-ft, 40-ft, LBT, MAHT...) |
-| 🚨 ODC alert                      | Auto-fails and flags if no standard vehicle can carry the cargo             |
-| 🌐 Streamlit Web Interface        | Clean, responsive UI accessible via link – no login required                |
+| 📐 Dimension & weight input       | Easy-to-use interface in meters and tonnes                                  |
+| ⚙️ Intelligent vehicle selection | Chooses from real-world vehicles (LCV, 14-ft, 22-ft, 40-ft, LBT, MAHT, etc.)|
+| 🚨 ODC alert                      | Flags cargo that exceeds CMVR limits and advises on permits/escorts         |
+| 🧊 Fragile cargo packaging        | Suggests protective packaging (Bubble wrap, Wooden crate, etc.)             |
+| 📊 Capacity utilization chart     | Bar chart showing % fill of recommended vehicle                             |
+| 📋 Expandable vehicle reference  | View full table of all supported vehicle types                              |
+| 🌐 Streamlit UI                   | Deployed online; works instantly without login                              |
 
 ---
 
-## 📸 Screenshot
+## 📸 Screenshots
 
-<img src="vehicle-selector-screenshot.png" alt="Artson Vehicle Selector Screenshot" width="700"/>
+### 🔧 Input Interface  
+![Input Screenshot](V-S-input-screenshot.png)
 
-
----
-
-## 🧠 How It Works
-
-The app uses a Python-based rules engine with a vehicle reference table like:
-
-- **LCV Truck (3T)** — 4.2m long
-- **14-ft Truck (10T)** — 6m
-- **Flatbed Trailer (40 ft)** — 18m, 30T
-- **Low Bed Trailer (LBT)** — 3.5m wide, 80T
-- **Hydraulic Modular Trailer** — up to 500T
-
-It selects the **first matching vehicle** that can safely carry the input cargo.
+### 📦 Output Recommendations  
+![Output Screenshot](V-S-output-screenshot.png)
 
 ---
 
-## 🚀 Run Locally
+## 📘 Vehicle Logic
 
-```bash
-git clone https://github.com/yourusername/artson-vehicle-selector.git
-cd artson-vehicle-selector
-pip install streamlit
-streamlit run vehicle_selector_app.py
+The app contains a curated reference table of commonly used EPC transport vehicles, including:
+
+| Vehicle Type                             | Max Length | Max Width | Max Height | Max Weight |
+|------------------------------------------|------------|-----------|------------|------------|
+| LCV Truck (Light Commercial Vehicle)      | 4.2 m      | 2.0 m     | 2.2 m      | 3 T        |
+| 14 ft Truck (Standard)                   | 6.0 m      | 2.5 m     | 2.5 m      | 10 T       |
+| 22 ft Truck / Semi Trailer               | 12.0 m     | 2.6 m     | 3.0 m      | 20 T       |
+| Flatbed Trailer (40 ft)                  | 18.0 m     | 2.6 m     | 3.5 m      | 30 T       |
+| Flatbed Trailer (60 ft)                  | 25.0 m     | 2.6 m     | 3.5 m      | 35 T       |
+| Semi Low Bed Trailer                     | 18.0 m     | 3.0 m     | 3.5 m      | 40 T       |
+| Low Bed Trailer                          | 18.0 m     | 3.5 m     | 4.2 m      | 80 T       |
+| Multi-Axle Modular Hydraulic Trailer     | 30.0 m     | 5.0 m     | 5.5 m      | 500 T      |
+| Container Trailer (40 ft)                | 12.2 m     | 2.6 m     | 2.9 m      | 28 T       |
+| Tanker Truck                             | 12.0 m     | 2.5 m     | 3.0 m      | 25 T       |
+
+---
+
+## 📘 ODC Limits (as per CMVR)
+
+```json
+{
+  "length": 12,
+  "width": 2.6,
+  "height": 3.8,
+  "weight": 40
+}
 
