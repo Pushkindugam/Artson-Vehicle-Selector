@@ -78,35 +78,6 @@ width = st.number_input("📐 Cargo Width (m)", value=2.5, step=0.1)
 height = st.number_input("📦 Cargo Height (m)", value=2.5, step=0.1)
 weight = st.number_input("⚖️ Cargo Weight (tonnes)", value=10.0, step=0.1)
 
-# 🧾 Additional Cargo Inputs
-st.markdown("### 📋 Cargo Details")
-cargo_type = st.selectbox("📦 Type of Cargo", ["Machinery", "Steel Structure", "Electrical Equipment", "Liquid", "Hazardous", "Other"])
-
-# Fragility Level
-fragility = st.selectbox("🧱 Fragility", ["No", "Yes - Needs cushioning", "Very Fragile - Handle with care"])
-
-# Packaging Requirement
-packaging_needed = st.checkbox("🎁 Is Packaging Required?", value=True)
-
-# Packaging Suggestion based on fragility
-packaging_suggestion = None
-packaging_options = ["Not Needed", "Wooden Crate", "Shrink Wrap", "Bubble Wrap", "Custom Industrial Packing"]
-
-if packaging_needed:
-    if fragility == "No":
-        packaging_suggestion = "Shrink Wrap"
-    elif fragility == "Yes - Needs cushioning":
-        packaging_suggestion = "Bubble Wrap"
-    elif fragility == "Very Fragile - Handle with care":
-        packaging_suggestion = "Custom Industrial Packing"
-
-    packaging = st.selectbox("📦 Select Packaging Type", packaging_options, index=packaging_options.index(packaging_suggestion))
-else:
-    packaging = "Not Needed"
-
-# Special Handling
-handling_instructions = st.text_input("🛠️ Special Handling Instructions", placeholder="e.g. Handle with crane, avoid vibration, etc.")
-
 
 # 🔍 Run matching
 if st.button("🔍 Recommend Vehicle"):
@@ -157,14 +128,6 @@ if st.button("🔍 Recommend Vehicle"):
         )
 
         st.altair_chart(chart)
-
-    # Show Cargo Notes
-    st.markdown("### 📦 Cargo Notes")
-    st.write(f"**Type**: {cargo_type}")
-    st.write(f"**Fragile**: {'Yes' if is_fragile else 'No'}")
-    st.write(f"**Packaging Required**: {'Yes' if needs_packaging else 'No'}")
-    if handling_instructions.strip():
-        st.write(f"**Special Handling Instructions**: {handling_instructions}")
 
     # ODC Check
     odc_exceeded = check_odc(length, width, height, weight)
