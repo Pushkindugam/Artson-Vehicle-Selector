@@ -180,14 +180,40 @@ with st.expander("📚 View All Vehicle Types"):
     st.table(pd.DataFrame(vehicle_types))
 
 with st.sidebar:
-    st.markdown("## 📘 ODC Transport Guidelines")
+    st.image(
+        "https://github.com/Pushkindugam/Artson-Scrap-Decision/blob/main/artson_logo.png?raw=true",
+        use_container_width=True,
+        caption="Artson Engineering Ltd."
+    )
+
+    st.markdown("## 🚛 What is ODC Transport?")
+    st.markdown("""
+    **ODC** stands for **Over Dimensional Cargo**, used in **EPC logistics**  
+    for transporting large, heavy, or irregularly sized equipment.
+
+    This tool helps validate dimensions and select **appropriate vehicles**
+    for safe and compliant movement.
+    """)
+
+    st.markdown("---")
+    st.markdown("### 📏 ODC Limits Preview")
     st.json(ODC_LIMITS)
 
     st.markdown("---")
     st.markdown("### 🛠️ Built by Artson SCM Team – 2025")
     st.markdown("*by **Pushkin Dugam***")
+    st.markdown("[🔗 GitHub Repository](https://github.com/Pushkindugam/Artson-Scrap-Decision)")
 
-    st.image("artson_logo.png", use_container_width=True, caption="Artson Engineering Ltd.")
+
+# with st.sidebar:
+#     st.markdown("## 📘 ODC Transport Guidelines")
+#     st.json(ODC_LIMITS)
+
+#     st.markdown("---")
+#     st.markdown("### 🛠️ Built by Artson SCM Team – 2025")
+#     st.markdown("*by **Pushkin Dugam***")
+
+#     st.image("artson_logo.png", use_container_width=True, caption="Artson Engineering Ltd.")
 
 
 
