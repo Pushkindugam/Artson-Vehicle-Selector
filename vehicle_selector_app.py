@@ -181,28 +181,30 @@ with st.expander("📚 View All Vehicle Types"):
 
 with st.sidebar:
     st.image(
-        "https://github.com/Pushkindugam/Artson-Scrap-Decision/blob/main/artson_logo.png?raw=true",
+        "https://github.com/Pushkindugam/Artson-Vehicle-Selector/blob/main/artson_logo.png?raw=true",
         use_container_width=True,
         caption="Artson Engineering Ltd."
     )
 
-    st.markdown("## 🚛 What is ODC Transport?")
+    st.markdown("## 🚛 ODC Guidelines")
     st.markdown("""
-    **ODC** stands for **Over Dimensional Cargo**, used in **EPC logistics**  
-    for transporting large, heavy, or irregularly sized equipment.
+    **ODC (Over Dimensional Cargo)** refers to cargo exceeding standard  
+    dimensions. This tool helps ensure **safe & compliant** transport.
+    """)
 
-    This tool helps validate dimensions and select **appropriate vehicles**
-    for safe and compliant movement.
+    st.markdown("### 📏 Standard ODC Limits")
+    st.markdown("""
+    - **Max Length:** 12.0 m  
+    - **Max Width:** 2.6 m  
+    - **Max Height:** 3.8 m  
+    - **Max Weight:** 40,000 kg
     """)
 
     st.markdown("---")
-    st.markdown("### 📏 ODC Limits Preview")
-    st.json(ODC_LIMITS)
-
-    st.markdown("---")
-    st.markdown("### 🛠️ Built by Artson SCM Team – 2025")
+    st.markdown("### 🛠️ Artson SCM Team – 2025")
     st.markdown("*by **Pushkin Dugam***")
-    st.markdown("[🔗 GitHub Repository](https://github.com/Pushkindugam/Artson-Scrap-Decision)")
+    st.markdown("[🔗 GitHub](https://github.com/Pushkindugam/Artson-Vehicle-Selector)")
+
 
 
 # with st.sidebar:
