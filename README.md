@@ -1,6 +1,6 @@
 # 🚛 Artson Vehicle Selector – EPC Transport Planner
 
-An intelligent transport logistics assistant for **Artson Engineering Ltd.**, built to assist EPC project teams in selecting the **right vehicle** for cargo transport.
+An intelligent transport logistics assistant for **Artson Engineering Ltd.**, built to assist EPC project teams in selecting the **right vehicle** for cargo transport based on size, weight, and packaging needs.
 
 🔗 **Live App:**  
 👉 [https://artson-vehicle-selector-xewufqpfkn32dzkeqlguk5.streamlit.app/](https://artson-vehicle-selector-xewufqpfkn32dzkeqlguk5.streamlit.app/)
@@ -9,36 +9,64 @@ An intelligent transport logistics assistant for **Artson Engineering Ltd.**, bu
 
 ## 📦 What This Tool Does
 
-This Streamlit-powered tool allows **project engineers**, **site planners**, and **SCM professionals** to:
+This Streamlit-powered tool enables **project engineers**, **site planners**, and **SCM professionals** to:
 
-- Enter **cargo dimensions (Length × Width × Height)** and **weight**
-- Instantly get a **vehicle recommendation** from real EPC transport options
-- Check if the cargo qualifies as **ODC (Over Dimensional Cargo)** under CMVR
-- Get **packaging suggestions** for fragile cargo types
-- Visualize **vehicle capacity utilization**
+- Input **cargo dimensions** (Length × Width × Height) and **weight**
+- Get an **instant recommendation** for the most suitable transport vehicle
+- Check whether the cargo is **ODC (Over Dimensional Cargo)** as per CMVR limits
+- Receive **packaging advice** for fragile items
+- See a **visual utilization graph** of the recommended vehicle
+- Refer to an **expandable transport table** for all vehicle specs
 
 ---
 
 ## 📸 Screenshots
 
-### 🔧 Input Interface  
-![Input Screenshot](V-S-input-screenshot.png)
-
-### 📦 Output Recommendations  
-![Output Screenshot](V-S-output-screenshot.png)
+| 🔧 Input Interface | 📦 Output Recommendations |
+|--------------------|---------------------------|
+| ![Input](https://github.com/Pushkindugam/Artson-Vehicle-Selector/blob/main/V-S-input-screenshot.png?raw=true) | ![Output](https://github.com/Pushkindugam/Artson-Vehicle-Selector/blob/main/V-S-output-screenshot.png?raw=true) |
 
 ---
 
-## 🛠️ Features
+## 🛠️ Key Features
 
 | Feature                          | Description                                                                 |
 |----------------------------------|-----------------------------------------------------------------------------|
-| 📐 Dimension & weight input       | Easy-to-use interface in meters and tonnes                                  |
-| ⚙️ Intelligent vehicle selection | Chooses from real-world vehicles (LCV, 14-ft, 22-ft, 40-ft, LBT, MAHT, etc.)|
-| 🚨 ODC alert                      | Flags cargo that exceeds CMVR limits and advises on permits/escorts         |
-| 🧊 Fragile cargo packaging        | Suggests protective packaging (Bubble wrap, Wooden crate, etc.)             |
-| 📊 Capacity utilization chart     | Bar chart showing % fill of recommended vehicle                             |
-| 📋 Expandable vehicle reference  | View full table of all supported vehicle types                              |
-| 🌐 Streamlit UI                   | Deployed online; works instantly without login                              |
+| 📐 Dimension & weight input       | Easy-to-use input in meters and tonnes                                      |
+| ⚙️ Intelligent vehicle selection | Picks optimal vehicle (LCV, 14-ft, 22-ft, 40-ft, LBT, MAHT, etc.)           |
+| 🚨 ODC alert                      | Warns if cargo exceeds CMVR legal limits; flags need for permit             |
+| 🧊 Fragile cargo packaging        | Suggests suitable packaging (Bubble Wrap, Wooden Crate, etc.)               |
+| 📊 Capacity utilization chart     | Graph shows vehicle volume % utilized                                       |
+| 📋 Expandable vehicle table       | Browse specs of all supported transport types                               |
+| 🌐 Streamlit-based UI             | No login required; accessible on any device                                 |
 
 ---
+
+## 🧭 Use Cases
+
+This tool supports EPC transport planning decisions related to:
+
+- Route planning for large equipment  
+- ODC and permit requirement identification  
+- Packaging recommendations for delicate cargo  
+- Vendor selection and vehicle capacity forecasting
+
+---
+
+## 🏗️ Built For
+
+> **Artson Engineering Ltd. (A Tata Enterprise)**  
+> *By Pushkin Dugam (B.Tech Mechanical, IIT Jodhpur)*
+
+---
+
+## 📤 Local Run Instructions
+
+To run locally:
+
+```bash
+git clone https://github.com/Pushkindugam/Artson-Vehicle-Selector.git
+cd Artson-Vehicle-Selector
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+
