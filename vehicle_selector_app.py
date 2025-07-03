@@ -16,10 +16,10 @@ vehicle_types = [
     {"name": "Low Bed Trailer", "max_length": 18, "max_width": 3.5, "max_height": 4.2, "max_weight": 80000, "cost_per_km": 90, "cost_per_tkm": 3, "has_sidewalls": False},
     {"name": "Multi-Axle Modular Trailer", "max_length": 30, "max_width": 5.0, "max_height": 5.5, "max_weight": 500000, "cost_per_km": 180, "cost_per_tkm": 2.5, "has_sidewalls": False},
     {"name": "Container Trailer (40 ft)", "max_length": 12.2, "max_width": 2.6, "max_height": 2.9, "max_weight": 28000, "cost_per_km": 42, "cost_per_tkm": 3.8, "has_sidewalls": True}
-    # {"name": "Tanker Truck", "max_length": 12, "max_width": 2.5, "max_height": 3.0, "max_weight": 25000, "cost_per_km": 45, "cost_per_tkm": 3.5, "has_sidewalls": True}
 ]
 
-ODC_LIMITS = {"length": 12.0, "width": 2.6, "height": 3.8, "weight": 40000}
+ODC_LIMITS = {"length": 12.0, "width": 2.6, "height": 3.8, "weight": 40000}  # weight in kg
+
 fragile_items = {
     "Precision Instrument": "Bubble Wrap + Custom Crating",
     "Glass Equipment": "Wooden Crate + Shock Absorbers",
@@ -48,13 +48,13 @@ def check_odc(length, width, height, weight):
         exceeded["Width"] = f"{width} m > {ODC_LIMITS['width']} m"
     if height > ODC_LIMITS["height"]:
         exceeded["Height"] = f"{height} m > {ODC_LIMITS['height']} m"
-    if weight > ODC_LIMITS["weight"] :
-        exceeded["Weight"] = f"{weight} t > {ODC_LIMITS['weight']} t"
+    if weight > ODC_LIMITS["weight"]:
+        exceeded["Weight"] = f"{weight} kg > {ODC_LIMITS['weight']} kg"
     return exceeded
 
 def compute_best_vehicle(length, width, height, weight, quantity, distance_km, allow_stacking, cargo_type):
     volume = length * width * height
-    total_weight = weight * quantity
+    total_weight = weight * quantity  # in kg
     results = []
 
     for v in vehicle_types:
@@ -63,22 +63,23 @@ def compute_best_vehicle(length, width, height, weight, quantity, distance_km, a
 
         cap_vol = v["max_length"] * v["max_width"] * v["max_height"]
         max_units_vol = math.floor(cap_vol / volume) if volume > 0 else quantity
-        max_units_wt = math.floor(v["max_weight"] / (weight)) if weight > 0 else quantity
+        max_units_wt = math.floor(v["max_weight"] / weight) if weight > 0 else quantity
 
         if not allow_stacking:
             fit_length = max(1, math.floor(v["max_length"] / length))
             fit_width = max(1, math.floor(v["max_width"] / width))
             fit_height = max(1, math.floor(v["max_height"] / height))
-    
             max_units_vol = min(fit_length * fit_width, fit_height)
-
 
         max_units = max(1, min(max_units_vol, max_units_wt))
         trucks_needed = math.ceil(quantity / max_units)
+        avg_weight_per_truck_tonnes = (total_weight / trucks_needed) / 1000
+
         total_cost = trucks_needed * (
             v["cost_per_km"] * distance_km +
-            v["cost_per_tkm"] * (total_weight / trucks_needed / 1000) * distance_km
+            v["cost_per_tkm"] * avg_weight_per_truck_tonnes * distance_km
         )
+
         results.append({
             "vehicle": v["name"],
             "class": classify_vehicle(v["name"]),
@@ -95,25 +96,23 @@ def compute_best_vehicle(length, width, height, weight, quantity, distance_km, a
 st.set_page_config(page_title="Vehicle Selector – Artson", layout="wide")
 st.title("🚛 Vehicle Recommendation Tool – Artson Logistics")
 st.caption("Built for SCM use-cases. Made by Pushkin Dugam.")
-
 st.markdown("---")
 
-# Inputs (with pre-filled realistic default values)
+# Inputs
 col1, col2 = st.columns(2)
 with col1:
     length = st.number_input("Cargo Length (m)", value=2.2, min_value=0.1)
     width = st.number_input("Cargo Width (m)", value=1.2, min_value=0.1)
     height = st.number_input("Cargo Height (m)", value=1.8, min_value=0.1)
-    weight = st.number_input("Cargo Weight (kgs)", value=1200, min_value=0.01)
+    weight = st.number_input("Cargo Weight (kg)", value=1200.0, min_value=0.01)
 with col2:
     quantity = st.number_input("Quantity of Cargo Units", value=4, min_value=1, step=1)
     distance_km = st.number_input("Transport Distance (km)", value=800, min_value=1)
     cargo_type = st.selectbox("Cargo Type", [
         "Standard Steel Fabrication", "Precision Instrument", "Glass Equipment",
         "Control Panel", "Pipeline", "Rotating Machinery", "Fragile Custom Assembly"
-    ], index=3)  # index 3 = "Control Panel"
+    ], index=3)
     stacking = st.checkbox("Allow Vertical Stacking (if feasible)", value=False)
-
 
 st.markdown("---")
 
