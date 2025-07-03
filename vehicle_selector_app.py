@@ -66,10 +66,12 @@ def compute_best_vehicle(length, width, height, weight, quantity, distance_km, a
         max_units_wt = math.floor(v["max_weight"] / (weight * 1000)) if weight > 0 else quantity
 
         if not allow_stacking:
-            max_units_vol = min(
-                math.floor(v["max_length"] / length) * math.floor(v["max_width"] / width),
-                math.floor(v["max_height"] / height)
-            )
+            fit_length = max(1, math.floor(v["max_length"] / length))
+            fit_width = max(1, math.floor(v["max_width"] / width))
+            fit_height = max(1, math.floor(v["max_height"] / height))
+    
+            max_units_vol = min(fit_length * fit_width, fit_height)
+
 
         max_units = max(1, min(max_units_vol, max_units_wt))
         trucks_needed = math.ceil(quantity / max_units)
