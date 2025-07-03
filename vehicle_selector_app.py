@@ -15,8 +15,8 @@ vehicle_types = [
     {"name": "Semi Low Bed", "max_length": 18, "max_width": 3.0, "max_height": 3.5, "max_weight": 40000, "cost_per_km": 75, "cost_per_tkm": 3.2, "has_sidewalls": False},
     {"name": "Low Bed Trailer", "max_length": 18, "max_width": 3.5, "max_height": 4.2, "max_weight": 80000, "cost_per_km": 90, "cost_per_tkm": 3, "has_sidewalls": False},
     {"name": "Multi-Axle Modular Trailer", "max_length": 30, "max_width": 5.0, "max_height": 5.5, "max_weight": 500000, "cost_per_km": 180, "cost_per_tkm": 2.5, "has_sidewalls": False},
-    {"name": "Container Trailer (40 ft)", "max_length": 12.2, "max_width": 2.6, "max_height": 2.9, "max_weight": 28000, "cost_per_km": 42, "cost_per_tkm": 3.8, "has_sidewalls": True},
-    {"name": "Tanker Truck", "max_length": 12, "max_width": 2.5, "max_height": 3.0, "max_weight": 25000, "cost_per_km": 45, "cost_per_tkm": 3.5, "has_sidewalls": True}
+    {"name": "Container Trailer (40 ft)", "max_length": 12.2, "max_width": 2.6, "max_height": 2.9, "max_weight": 28000, "cost_per_km": 42, "cost_per_tkm": 3.8, "has_sidewalls": True}
+    # {"name": "Tanker Truck", "max_length": 12, "max_width": 2.5, "max_height": 3.0, "max_weight": 25000, "cost_per_km": 45, "cost_per_tkm": 3.5, "has_sidewalls": True}
 ]
 
 ODC_LIMITS = {"length": 12.0, "width": 2.6, "height": 3.8, "weight": 40000}
