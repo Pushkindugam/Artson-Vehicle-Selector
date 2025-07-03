@@ -7,20 +7,19 @@ import math
 # Vehicle master data
 # ----------------------------
 vehicle_types = [
-    {"name": "LCV Truck", "max_length": 4.2, "max_width": 2.0, "max_height": 2.2, "max_weight": 3, "cost_per_km": 20, "cost_per_tkm": 6, "enclosed": True},
-    {"name": "14 ft Truck", "max_length": 6, "max_width": 2.5, "max_height": 2.5, "max_weight": 10, "cost_per_km": 30, "cost_per_tkm": 5, "enclosed": True},
-    {"name": "22 ft Truck", "max_length": 12, "max_width": 2.6, "max_height": 3, "max_weight": 20, "cost_per_km": 40, "cost_per_tkm": 4.5, "enclosed": True},
-    {"name": "Flatbed Trailer (40 ft)", "max_length": 18, "max_width": 2.6, "max_height": 3.5, "max_weight": 30, "cost_per_km": 60, "cost_per_tkm": 4, "enclosed": False},
-    {"name": "Flatbed Trailer (60 ft)", "max_length": 25, "max_width": 2.6, "max_height": 3.5, "max_weight": 35, "cost_per_km": 70, "cost_per_tkm": 3.5, "enclosed": False},
-    {"name": "Semi Low Bed", "max_length": 18, "max_width": 3.0, "max_height": 3.5, "max_weight": 40, "cost_per_km": 80, "cost_per_tkm": 3, "enclosed": False},
-    {"name": "Low Bed Trailer", "max_length": 18, "max_width": 3.5, "max_height": 4.2, "max_weight": 80, "cost_per_km": 100, "cost_per_tkm": 2.5, "enclosed": False},
-    {"name": "Multi-Axle Modular Trailer", "max_length": 30, "max_width": 5.0, "max_height": 5.5, "max_weight": 500, "cost_per_km": 200, "cost_per_tkm": 1.8, "enclosed": False},
-    {"name": "Container Trailer (40 ft)", "max_length": 12.2, "max_width": 2.6, "max_height": 2.9, "max_weight": 28, "cost_per_km": 45, "cost_per_tkm": 4, "enclosed": True},
-    {"name": "Tanker Truck", "max_length": 12, "max_width": 2.5, "max_height": 3.0, "max_weight": 25, "cost_per_km": 50, "cost_per_tkm": 3.8, "enclosed": True}
+    {"name": "LCV Truck", "max_length": 4.2, "max_width": 2.0, "max_height": 2.2, "max_weight": 3, "cost_per_km": 20, "cost_per_tkm": 6, "has_walls": True},
+    {"name": "14 ft Truck", "max_length": 6, "max_width": 2.5, "max_height": 2.5, "max_weight": 10, "cost_per_km": 30, "cost_per_tkm": 5, "has_walls": True},
+    {"name": "22 ft Truck", "max_length": 12, "max_width": 2.6, "max_height": 3, "max_weight": 20, "cost_per_km": 40, "cost_per_tkm": 4.5, "has_walls": True},
+    {"name": "Flatbed Trailer (40 ft)", "max_length": 18, "max_width": 2.6, "max_height": 3.5, "max_weight": 30, "cost_per_km": 60, "cost_per_tkm": 4, "has_walls": False},
+    {"name": "Flatbed Trailer (60 ft)", "max_length": 25, "max_width": 2.6, "max_height": 3.5, "max_weight": 35, "cost_per_km": 70, "cost_per_tkm": 3.5, "has_walls": False},
+    {"name": "Semi Low Bed", "max_length": 18, "max_width": 3.0, "max_height": 3.5, "max_weight": 40, "cost_per_km": 80, "cost_per_tkm": 3, "has_walls": False},
+    {"name": "Low Bed Trailer", "max_length": 18, "max_width": 3.5, "max_height": 4.2, "max_weight": 80, "cost_per_km": 100, "cost_per_tkm": 2.5, "has_walls": False},
+    {"name": "Multi-Axle Modular Trailer", "max_length": 30, "max_width": 5.0, "max_height": 5.5, "max_weight": 500, "cost_per_km": 200, "cost_per_tkm": 1.8, "has_walls": False},
+    {"name": "Container Trailer (40 ft)", "max_length": 12.2, "max_width": 2.6, "max_height": 2.9, "max_weight": 28, "cost_per_km": 45, "cost_per_tkm": 4, "has_walls": True},
+    {"name": "Tanker Truck", "max_length": 12, "max_width": 2.5, "max_height": 3.0, "max_weight": 25, "cost_per_km": 50, "cost_per_tkm": 3.8, "has_walls": True},
 ]
 
 ODC_LIMITS = {"length": 12.0, "width": 2.6, "height": 3.8, "weight": 40}
-
 fragile_items = {
     "Precision Instrument": "Bubble Wrap + Custom Crating",
     "Glass Equipment": "Wooden Crate + Shock Absorbers",
@@ -29,6 +28,21 @@ fragile_items = {
     "Fragile Custom Assembly": "Bubble Wrap + Wooden Crate"
 }
 
+# Sidebar
+with st.sidebar:
+    st.image("https://github.com/Pushkindugam/Artson-Vehicle-Selector/blob/main/artson_logo.png?raw=true", use_container_width=True)
+    st.title("🔧 Artson SCM Tool")
+    st.markdown("- Built by **Pushkin Dugam**")
+    st.markdown("[🔗 GitHub Repository](https://github.com/Pushkindugam/Artson-Vehicle-Selector)")
+    st.markdown("### 🚨 ODC Rules")
+    st.markdown("""
+    - Max Length: 12.0 m  
+    - Max Width: 2.6 m  
+    - Max Height: 3.8 m  
+    - Max Weight: 40 t
+    """)
+
+# Functions
 def classify_vehicle(name):
     if "LCV" in name or "14 ft" in name:
         return "🟢 Light Commercial"
@@ -44,79 +58,88 @@ def classify_vehicle(name):
 def check_odc(length, width, height, weight):
     exceeded = {}
     if length > ODC_LIMITS["length"]:
-        exceeded["Length"] = f"📏 {length} m > {ODC_LIMITS['length']} m"
+        exceeded["Length"] = f"{length} m > {ODC_LIMITS['length']} m"
     if width > ODC_LIMITS["width"]:
-        exceeded["Width"] = f"📐 {width} m > {ODC_LIMITS['width']} m"
+        exceeded["Width"] = f"{width} m > {ODC_LIMITS['width']} m"
     if height > ODC_LIMITS["height"]:
-        exceeded["Height"] = f"📏 {height} m > {ODC_LIMITS['height']} m"
+        exceeded["Height"] = f"{height} m > {ODC_LIMITS['height']} m"
     if weight > ODC_LIMITS["weight"]:
-        exceeded["Weight"] = f"⚖️ {weight} t > {ODC_LIMITS['weight']} t"
+        exceeded["Weight"] = f"{weight} t > {ODC_LIMITS['weight']} t"
     return exceeded
 
-def compute_best_vehicle(length, width, height, weight, quantity, distance_km, cargo_type):
+def compute_best_vehicle(length, width, height, weight, quantity, distance_km, stacking):
     volume = length * width * height
     total_weight = weight * quantity
     results = []
 
     for v in vehicle_types:
-        if cargo_type in fragile_items and not v.get("enclosed", True):
-            continue
-
-        cap_vol = v["max_length"] * v["max_width"] * v["max_height"]
-        max_units_vol = math.floor(cap_vol / volume)
+        if stacking == "Vertical Stacking Allowed":
+            cargo_fit = math.floor(v["max_length"] / length) * math.floor(v["max_width"] / width) * math.floor(v["max_height"] / height)
+        else:
+            cargo_fit = math.floor(v["max_length"] / length) * math.floor(v["max_width"] / width)
+        max_units_vol = cargo_fit
         max_units_wt = math.floor(v["max_weight"] / weight) if weight > 0 else quantity
         max_units = min(max_units_vol, max_units_wt)
-
         if max_units == 0:
+            continue
+        if not v["has_walls"] and (fragile_items.get(cargo_type) is not None):
             continue
 
         trucks_needed = math.ceil(quantity / max_units)
-        cost_per_truck = v["cost_per_km"] * distance_km + v["cost_per_tkm"] * (total_weight / trucks_needed) * distance_km
-        total_cost = trucks_needed * cost_per_truck
-
+        total_cost = trucks_needed * (v["cost_per_km"] * distance_km + v["cost_per_tkm"] * (total_weight / trucks_needed) * distance_km)
         results.append({
             "vehicle": v["name"],
             "class": classify_vehicle(v["name"]),
             "num_trucks": trucks_needed,
             "total_cost": round(total_cost, 2),
-            "max_units_per_truck": max_units,
-            "enclosed": v["enclosed"]
+            "max_units_per_truck": max_units
         })
 
     return sorted(results, key=lambda x: x["total_cost"])
 
 # ----------------------------
-# Streamlit App Starts
+# Main App
 # ----------------------------
 st.set_page_config(page_title="Vehicle Selector – Artson", layout="centered")
 st.title("🚛 Vehicle Recommendation Tool – Artson Logistics")
 st.caption("Built for SCM use-cases. Made by Pushkin Dugam.")
 
-st.header("📦 Enter Cargo Details")
-length = st.number_input("Cargo Length (m)", value=2.0)
-width = st.number_input("Cargo Width (m)", value=1.5)
-height = st.number_input("Cargo Height (m)", value=1.2)
-weight = st.number_input("Cargo Weight (tons)", value=0.5)
-quantity = st.number_input("Quantity of Cargo Units", value=10, step=1)
-distance_km = st.number_input("Transport Distance (km)", value=500)
-cargo_type = st.selectbox("Cargo Type", [
-    "Standard Steel Fabrication", "Precision Instrument", "Glass Equipment",
-    "Control Panel", "Pipeline", "Rotating Machinery", "Fragile Custom Assembly"
-])
+# User Input Layout
+layout_pref = st.radio("📐 Layout Type", ["Vertical", "Side-by-Side"])
+stacking = st.radio("📦 Cargo Stacking Allowed?", ["Vertical Stacking Allowed", "Side-by-Side Only"])
+
+if layout_pref == "Side-by-Side":
+    col1, col2 = st.columns(2)
+    with col1:
+        length = st.number_input("Cargo Length (m)", value=2.0)
+        width = st.number_input("Cargo Width (m)", value=1.5)
+        height = st.number_input("Cargo Height (m)", value=1.2)
+        weight = st.number_input("Cargo Weight (tons)", value=0.5)
+    with col2:
+        quantity = st.number_input("Quantity of Cargo Units", value=10, step=1)
+        distance_km = st.number_input("Transport Distance (km)", value=500)
+        cargo_type = st.selectbox("Cargo Type", list(fragile_items.keys()) + ["Standard Steel Fabrication", "Pipeline"])
+else:
+    length = st.number_input("Cargo Length (m)", value=2.0)
+    width = st.number_input("Cargo Width (m)", value=1.5)
+    height = st.number_input("Cargo Height (m)", value=1.2)
+    weight = st.number_input("Cargo Weight (tons)", value=0.5)
+    quantity = st.number_input("Quantity of Cargo Units", value=10, step=1)
+    distance_km = st.number_input("Transport Distance (km)", value=500)
+    cargo_type = st.selectbox("Cargo Type", list(fragile_items.keys()) + ["Standard Steel Fabrication", "Pipeline"])
 
 if st.button("🔍 Recommend Vehicle"):
-    results = compute_best_vehicle(length, width, height, weight, quantity, distance_km, cargo_type)
+    results = compute_best_vehicle(length, width, height, weight, quantity, distance_km, stacking)
     if not results:
-        st.error("❌ No suitable vehicle found for this cargo type and dimensions.")
+        st.error("❌ No suitable vehicle found.")
     else:
         best = results[0]
-        st.success(f"✅ **Recommended Vehicle:** {best['vehicle']}")
+        st.success(f"✅ Recommended Vehicle: **{best['vehicle']}**")
         st.markdown(f"**Class:** {best['class']}")
         st.markdown(f"**Number of Trucks Required:** {best['num_trucks']}")
         st.markdown(f"**Estimated Transport Cost:** ₹ {best['total_cost']}")
         st.markdown(f"**Max Units per Truck:** {best['max_units_per_truck']}")
 
-        # 2. ODC Alert
         odc_exceeded = check_odc(length, width, height, weight)
         if odc_exceeded:
             st.warning("⚠️ **ODC Alert:** This cargo exceeds standard transport limits and qualifies as **Over Dimensional Cargo (ODC)**.")
@@ -127,11 +150,9 @@ if st.button("🔍 Recommend Vehicle"):
         else:
             st.info("📦 This cargo is **within standard CMVR transport limits** and does **not** qualify as ODC.")
 
-        # 3. Fragile Packaging Info
         if cargo_type in fragile_items:
             st.info(f"📦 Fragile Cargo – Suggested Packaging: **{fragile_items[cargo_type]}**")
 
-        # 4. Chart
         st.subheader("📊 Cost Comparison by Vehicle Type")
         df = pd.DataFrame(results)
         chart = alt.Chart(df).mark_bar().encode(
@@ -142,26 +163,9 @@ if st.button("🔍 Recommend Vehicle"):
         ).properties(height=400)
         st.altair_chart(chart, use_container_width=True)
 
-# Expandable view
+# Vehicle Data
 with st.expander("📋 View All Vehicle Types"):
     st.dataframe(pd.DataFrame(vehicle_types))
-
-# Sidebar
-with st.sidebar:
-    st.image(
-        "https://github.com/Pushkindugam/Artson-Vehicle-Selector/blob/main/artson_logo.png?raw=true",
-        use_container_width=True,
-    )
-    st.markdown("## 🔧 Artson SCM Tool")
-    st.markdown("- Built by **Pushkin Dugam**")
-    st.markdown("[🔗 GitHub Repository](https://github.com/Pushkindugam/Artson-Vehicle-Selector)")
-    st.markdown("### 🚨 ODC Rules")
-    st.markdown("""
-    - Max Length: 12.0 m  
-    - Max Width: 2.6 m  
-    - Max Height: 3.8 m  
-    - Max Weight: 40 t
-    """)
 
 
 
