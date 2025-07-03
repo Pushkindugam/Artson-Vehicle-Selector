@@ -22,13 +22,9 @@ This Streamlit-powered tool enables **project engineers**, **site planners**, an
 
 ## 📸 Screenshots
 
-<!-- Screenshots will be added here -->
-
-<!--
 | 🔧 Input Interface | 📦 Output Recommendations |
 |--------------------|---------------------------|
-| ![Input](https://github.com/Pushkindugam/Artson-Vehicle-Selector/blob/main/V-S-input-screenshot.png?raw=true) | ![Output](https://github.com/Pushkindugam/Artson-Vehicle-Selector/blob/main/V-S-output-screenshot.png?raw=true) |
--->
+| ![Input](VRT_input%20screenshot.png) | ![Output](VRT_output%20screenshot.png) |
 
 ---
 
