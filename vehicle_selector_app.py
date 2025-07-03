@@ -3,7 +3,7 @@ import pandas as pd
 import altair as alt
 import math
 
-# ✅ Setup
+# ✅ Streamlit App Setup
 st.set_page_config(
     layout="centered",
     initial_sidebar_state="expanded",
@@ -11,7 +11,7 @@ st.set_page_config(
     page_icon="🚚"
 )
 
-# ✅ Vehicle Reference Data
+# ✅ Vehicle Master Data
 vehicle_types = [
     {"name": "LCV Truck (Light Commercial Vehicle)", "max_length": 4.2, "max_width": 2.0, "max_height": 2.2, "max_weight": 3, "cost_per_km": 20, "cost_per_tkm": 6},
     {"name": "14 ft Truck (Standard)", "max_length": 6, "max_width": 2.5, "max_height": 2.5, "max_weight": 10, "cost_per_km": 30, "cost_per_tkm": 5},
@@ -62,10 +62,13 @@ def compute_best_vehicle(length, width, height, weight, quantity, distance_km):
         max_units_by_volume = math.floor(cap_vol / volume)
         max_units_by_weight = math.floor(v["max_weight"] / weight) if weight > 0 else quantity
         max_units = min(max_units_by_volume, max_units_by_weight)
+
         if max_units == 0:
             continue
+
         num_trucks = math.ceil(quantity / max_units)
         total_cost = num_trucks * (v["cost_per_km"] * distance_km + v["cost_per_tkm"] * total_weight * distance_km / num_trucks)
+
         results.append({
             "vehicle": v["name"],
             "class": classify_vehicle(v["name"]),
@@ -74,11 +77,9 @@ def compute_best_vehicle(length, width, height, weight, quantity, distance_km):
             "max_units_per_truck": max_units
         })
 
-    if results:
-        return sorted(results, key=lambda x: x["total_cost"])
-    return None
+    return sorted(results, key=lambda x: x["total_cost"]) if results else None
 
-# ✅ Streamlit UI
+# ✅ Streamlit Interface
 st.title("🚚 Vehicle Recommendation Tool – Artson Logistics")
 
 st.markdown("""
@@ -113,9 +114,8 @@ fragile_items = {
 is_fragile = cargo_type in fragile_items
 packaging_suggestion = fragile_items.get(cargo_type, "Not Needed")
 
-# 🔍 Main Logic
+# 🔍 Recommendation
 if st.button("🔍 Recommend Vehicle"):
-
     results = compute_best_vehicle(length, width, height, weight, quantity, distance_km)
 
     if not results:
@@ -128,20 +128,18 @@ if st.button("🔍 Recommend Vehicle"):
         st.markdown(f"**Estimated Transport Cost:** ₹ **{best['total_cost']}**")
         st.markdown(f"**Units per Truck (approx):** {best['max_units_per_truck']}")
 
-        # ODC Check
         odc = check_odc(length, width, height, weight)
         if odc:
             st.warning("⚠️ This cargo qualifies as **ODC**.")
             for k, msg in odc.items():
                 st.markdown(f"- {k}: {msg}")
 
-        # Packaging
         if is_fragile:
             st.info(f"📦 Fragile Cargo: Suggested Packaging: **{packaging_suggestion}**")
         else:
             st.success("✅ Non-fragile cargo")
 
-        # Chart
+        # 📊 Visualization
         df = pd.DataFrame(results)
         chart = alt.Chart(df).mark_bar().encode(
             y=alt.Y("vehicle:N", title="Vehicle Type", sort="-x"),
@@ -151,9 +149,11 @@ if st.button("🔍 Recommend Vehicle"):
         ).properties(title="📊 Estimated Cost per Vehicle Type")
         st.altair_chart(chart, use_container_width=True)
 
+# 📋 Vehicle Reference Table
 with st.expander("📚 View All Vehicle Types"):
     st.dataframe(pd.DataFrame(vehicle_types))
 
+# 📌 Sidebar – Branding and Notes
 with st.sidebar:
     st.image(
         "https://github.com/Pushkindugam/Artson-Vehicle-Selector/blob/main/artson_logo.png?raw=true",
@@ -179,9 +179,6 @@ with st.sidebar:
     st.markdown("### 🛠️ Artson SCM Team – 2025")
     st.markdown("*by **Pushkin Dugam***")
     st.markdown("[🔗 GitHub](https://github.com/Pushkindugam/Artson-Vehicle-Selector)")
-
-
-
 
 
 
