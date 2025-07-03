@@ -48,13 +48,13 @@ def check_odc(length, width, height, weight):
         exceeded["Width"] = f"{width} m > {ODC_LIMITS['width']} m"
     if height > ODC_LIMITS["height"]:
         exceeded["Height"] = f"{height} m > {ODC_LIMITS['height']} m"
-    if weight > ODC_LIMITS["weight"] / 1000:
-        exceeded["Weight"] = f"{weight} t > {ODC_LIMITS['weight']/1000} t"
+    if weight > ODC_LIMITS["weight"] :
+        exceeded["Weight"] = f"{weight} t > {ODC_LIMITS['weight']} t"
     return exceeded
 
 def compute_best_vehicle(length, width, height, weight, quantity, distance_km, allow_stacking, cargo_type):
     volume = length * width * height
-    total_weight = weight * 1000 * quantity
+    total_weight = weight * quantity
     results = []
 
     for v in vehicle_types:
@@ -63,7 +63,7 @@ def compute_best_vehicle(length, width, height, weight, quantity, distance_km, a
 
         cap_vol = v["max_length"] * v["max_width"] * v["max_height"]
         max_units_vol = math.floor(cap_vol / volume) if volume > 0 else quantity
-        max_units_wt = math.floor(v["max_weight"] / (weight * 1000)) if weight > 0 else quantity
+        max_units_wt = math.floor(v["max_weight"] / (weight)) if weight > 0 else quantity
 
         if not allow_stacking:
             fit_length = max(1, math.floor(v["max_length"] / length))
@@ -104,7 +104,7 @@ with col1:
     length = st.number_input("Cargo Length (m)", value=2.2, min_value=0.1)
     width = st.number_input("Cargo Width (m)", value=1.2, min_value=0.1)
     height = st.number_input("Cargo Height (m)", value=1.8, min_value=0.1)
-    weight = st.number_input("Cargo Weight (tons)", value=1.2, min_value=0.01)
+    weight = st.number_input("Cargo Weight (kgs)", value=1200, min_value=0.01)
 with col2:
     quantity = st.number_input("Quantity of Cargo Units", value=4, min_value=1, step=1)
     distance_km = st.number_input("Transport Distance (km)", value=800, min_value=1)
