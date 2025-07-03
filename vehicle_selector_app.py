@@ -126,9 +126,9 @@ if st.button("🔍 Recommend Vehicle"):
         best = results[0]
         st.success(f"✅ **Recommended Vehicle:** {best['vehicle']}")
         st.markdown(f"- **Class:** {best['class']}")
-        st.markdown(f"- **Number of Trucks Required:** {best['num_trucks']}")
+        st.markdown(f"- **Number of Vehicles Required:** {best['num_trucks']}")
         st.markdown(f"- **Estimated Transport Cost:** ₹ {best['total_cost']}")
-        st.markdown(f"- **Max Units per Truck:** {best['max_units_per_truck']}")
+        st.markdown(f"- **Max Units per Vehicle:** {best['max_units_per_truck']}")
 
         odc_exceeded = check_odc(length, width, height, weight)
         if odc_exceeded:
