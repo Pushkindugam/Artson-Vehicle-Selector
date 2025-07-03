@@ -98,12 +98,12 @@ st.caption("Built for SCM use-cases. Made by Pushkin Dugam.")
 
 st.markdown("---")
 
-# Inputs
+# Inputs (with pre-filled realistic default values)
 col1, col2 = st.columns(2)
 with col1:
-    length = st.number_input("Cargo Length (m)", value=2.5, min_value=0.1)
-    width = st.number_input("Cargo Width (m)", value=1.8, min_value=0.1)
-    height = st.number_input("Cargo Height (m)", value=2.2, min_value=0.1)
+    length = st.number_input("Cargo Length (m)", value=2.4, min_value=0.1)
+    width = st.number_input("Cargo Width (m)", value=1.2, min_value=0.1)
+    height = st.number_input("Cargo Height (m)", value=1.8, min_value=0.1)
     weight = st.number_input("Cargo Weight (tons)", value=1.2, min_value=0.01)
 with col2:
     quantity = st.number_input("Quantity of Cargo Units", value=6, min_value=1, step=1)
@@ -111,8 +111,9 @@ with col2:
     cargo_type = st.selectbox("Cargo Type", [
         "Standard Steel Fabrication", "Precision Instrument", "Glass Equipment",
         "Control Panel", "Pipeline", "Rotating Machinery", "Fragile Custom Assembly"
-    ])
+    ], index=3)  # index 3 = "Control Panel"
     stacking = st.checkbox("Allow Vertical Stacking (if feasible)", value=False)
+
 
 st.markdown("---")
 
