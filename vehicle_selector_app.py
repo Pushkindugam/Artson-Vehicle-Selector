@@ -7,16 +7,16 @@ import math
 # Vehicle master data
 # ----------------------------
 vehicle_types = [
-    {"name": "LCV Truck", "max_length": 4.2, "max_width": 2.0, "max_height": 2.2, "max_weight": 3000, "cost_per_km": 20, "cost_per_tkm": 6, "has_sidewalls": True},
-    {"name": "14 ft Truck", "max_length": 6, "max_width": 2.5, "max_height": 2.5, "max_weight": 10000, "cost_per_km": 30, "cost_per_tkm": 5, "has_sidewalls": True},
-    {"name": "22 ft Truck", "max_length": 12, "max_width": 2.6, "max_height": 3, "max_weight": 20000, "cost_per_km": 40, "cost_per_tkm": 4.5, "has_sidewalls": True},
-    {"name": "Flatbed Trailer (40 ft)", "max_length": 18, "max_width": 2.6, "max_height": 3.5, "max_weight": 30000, "cost_per_km": 60, "cost_per_tkm": 4, "has_sidewalls": False},
-    {"name": "Flatbed Trailer (60 ft)", "max_length": 25, "max_width": 2.6, "max_height": 3.5, "max_weight": 35000, "cost_per_km": 70, "cost_per_tkm": 3.5, "has_sidewalls": False},
-    {"name": "Semi Low Bed", "max_length": 18, "max_width": 3.0, "max_height": 3.5, "max_weight": 40000, "cost_per_km": 80, "cost_per_tkm": 3, "has_sidewalls": False},
-    {"name": "Low Bed Trailer", "max_length": 18, "max_width": 3.5, "max_height": 4.2, "max_weight": 80000, "cost_per_km": 100, "cost_per_tkm": 2.5, "has_sidewalls": False},
-    {"name": "Multi-Axle Modular Trailer", "max_length": 30, "max_width": 5.0, "max_height": 5.5, "max_weight": 500000, "cost_per_km": 200, "cost_per_tkm": 1.8, "has_sidewalls": False},
-    {"name": "Container Trailer (40 ft)", "max_length": 12.2, "max_width": 2.6, "max_height": 2.9, "max_weight": 28000, "cost_per_km": 45, "cost_per_tkm": 4, "has_sidewalls": True},
-    {"name": "Tanker Truck", "max_length": 12, "max_width": 2.5, "max_height": 3.0, "max_weight": 25000, "cost_per_km": 50, "cost_per_tkm": 3.8, "has_sidewalls": True}
+    {"name": "LCV Truck", "max_length": 4.2, "max_width": 2.0, "max_height": 2.2, "max_weight": 3000, "cost_per_km": 18, "cost_per_tkm": 5.5, "has_sidewalls": True},
+    {"name": "14 ft Truck", "max_length": 6, "max_width": 2.5, "max_height": 2.5, "max_weight": 10000, "cost_per_km": 28, "cost_per_tkm": 5, "has_sidewalls": True},
+    {"name": "22 ft Truck", "max_length": 12, "max_width": 2.6, "max_height": 3, "max_weight": 20000, "cost_per_km": 38, "cost_per_tkm": 4.3, "has_sidewalls": True},
+    {"name": "Flatbed Trailer (40 ft)", "max_length": 18, "max_width": 2.6, "max_height": 3.5, "max_weight": 30000, "cost_per_km": 55, "cost_per_tkm": 3.8, "has_sidewalls": False},
+    {"name": "Flatbed Trailer (60 ft)", "max_length": 25, "max_width": 2.6, "max_height": 3.5, "max_weight": 35000, "cost_per_km": 65, "cost_per_tkm": 3.5, "has_sidewalls": False},
+    {"name": "Semi Low Bed", "max_length": 18, "max_width": 3.0, "max_height": 3.5, "max_weight": 40000, "cost_per_km": 75, "cost_per_tkm": 3.2, "has_sidewalls": False},
+    {"name": "Low Bed Trailer", "max_length": 18, "max_width": 3.5, "max_height": 4.2, "max_weight": 80000, "cost_per_km": 90, "cost_per_tkm": 3, "has_sidewalls": False},
+    {"name": "Multi-Axle Modular Trailer", "max_length": 30, "max_width": 5.0, "max_height": 5.5, "max_weight": 500000, "cost_per_km": 180, "cost_per_tkm": 2.5, "has_sidewalls": False},
+    {"name": "Container Trailer (40 ft)", "max_length": 12.2, "max_width": 2.6, "max_height": 2.9, "max_weight": 28000, "cost_per_km": 42, "cost_per_tkm": 3.8, "has_sidewalls": True},
+    {"name": "Tanker Truck", "max_length": 12, "max_width": 2.5, "max_height": 3.0, "max_weight": 25000, "cost_per_km": 45, "cost_per_tkm": 3.5, "has_sidewalls": True}
 ]
 
 ODC_LIMITS = {"length": 12.0, "width": 2.6, "height": 3.8, "weight": 40000}
@@ -99,18 +99,18 @@ st.markdown("---")
 # Inputs
 col1, col2 = st.columns(2)
 with col1:
-    length = st.number_input("Cargo Length (m)", value=2.0, min_value=0.1)
-    width = st.number_input("Cargo Width (m)", value=1.5, min_value=0.1)
-    height = st.number_input("Cargo Height (m)", value=1.2, min_value=0.1)
-    weight = st.number_input("Cargo Weight (tons)", value=0.5, min_value=0.01)
+    length = st.number_input("Cargo Length (m)", value=2.5, min_value=0.1)
+    width = st.number_input("Cargo Width (m)", value=1.8, min_value=0.1)
+    height = st.number_input("Cargo Height (m)", value=2.2, min_value=0.1)
+    weight = st.number_input("Cargo Weight (tons)", value=1.2, min_value=0.01)
 with col2:
-    quantity = st.number_input("Quantity of Cargo Units", value=10, min_value=1, step=1)
-    distance_km = st.number_input("Transport Distance (km)", value=500, min_value=1)
+    quantity = st.number_input("Quantity of Cargo Units", value=6, min_value=1, step=1)
+    distance_km = st.number_input("Transport Distance (km)", value=800, min_value=1)
     cargo_type = st.selectbox("Cargo Type", [
         "Standard Steel Fabrication", "Precision Instrument", "Glass Equipment",
         "Control Panel", "Pipeline", "Rotating Machinery", "Fragile Custom Assembly"
     ])
-    stacking = st.checkbox("Allow Vertical Stacking (if feasible)", value=True)
+    stacking = st.checkbox("Allow Vertical Stacking (if feasible)", value=False)
 
 st.markdown("---")
 
@@ -176,7 +176,6 @@ with st.sidebar:
     st.markdown("### 🛠️ Artson SCM Team – 2025")
     st.markdown("*by **Pushkin Dugam***")
     st.markdown("[🔗 GitHub](https://github.com/Pushkindugam/Artson-Vehicle-Selector)")
-
 
 
 
