@@ -155,16 +155,30 @@ with st.expander("📚 View All Vehicle Types"):
     st.dataframe(pd.DataFrame(vehicle_types))
 
 with st.sidebar:
-    st.markdown("### ℹ️ ODC Transport Limits")
+    st.image(
+        "https://github.com/Pushkindugam/Artson-Vehicle-Selector/blob/main/artson_logo.png?raw=true",
+        use_container_width=True,
+        caption="Artson Engineering Ltd."
+    )
+
+    st.markdown("## 🚛 ODC Guidelines")
     st.markdown("""
-- Length ≤ 12.0 m  
-- Width ≤ 2.6 m  
-- Height ≤ 3.8 m  
-- Weight ≤ 40 tonnes
-""")
+    **ODC (Over Dimensional Cargo)** refers to cargo exceeding standard  
+    dimensions. This tool helps ensure **safe & compliant** transport.
+    """)
+
+    st.markdown("### 📏 Standard ODC Limits")
+    st.markdown("""
+    - **Max Length:** 12.0 m  
+    - **Max Width:** 2.6 m  
+    - **Max Height:** 3.8 m  
+    - **Max Weight:** 40,000 kg
+    """)
+
     st.markdown("---")
-    st.markdown("**🛠️ Artson SCM Tool**  
-Made by [Pushkin Dugam](https://github.com/Pushkindugam/Artson-Vehicle-Selector)")
+    st.markdown("### 🛠️ Artson SCM Team – 2025")
+    st.markdown("*by **Pushkin Dugam***")
+    st.markdown("[🔗 GitHub](https://github.com/Pushkindugam/Artson-Vehicle-Selector)")
 
 
 
