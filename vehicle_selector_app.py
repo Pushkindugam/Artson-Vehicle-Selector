@@ -43,13 +43,13 @@ def classify_vehicle(name):
 def check_odc(length, width, height, weight):
     exceeded = {}
     if length > ODC_LIMITS["length"]:
-        exceeded["Length"] = f"{length} m > {ODC_LIMITS['length']} m"
+        exceeded["Length"] = f"📏 {length} m > {ODC_LIMITS['length']} m"
     if width > ODC_LIMITS["width"]:
-        exceeded["Width"] = f"{width} m > {ODC_LIMITS['width']} m"
+        exceeded["Width"] = f"📐 {width} m > {ODC_LIMITS['width']} m"
     if height > ODC_LIMITS["height"]:
-        exceeded["Height"] = f"{height} m > {ODC_LIMITS['height']} m"
+        exceeded["Height"] = f"📏 {height} m > {ODC_LIMITS['height']} m"
     if weight > ODC_LIMITS["weight"]:
-        exceeded["Weight"] = f"{weight} t > {ODC_LIMITS['weight']} t"
+        exceeded["Weight"] = f"⚖️ {weight} t > {ODC_LIMITS['weight']} t"
     return exceeded
 
 def compute_best_vehicle(length, width, height, weight, quantity, distance_km):
@@ -83,21 +83,27 @@ st.set_page_config(page_title="Vehicle Selector – Artson", layout="centered")
 st.title("🚛 Vehicle Recommendation Tool – Artson Logistics")
 st.caption("Built for SCM use-cases. Made by Pushkin Dugam.")
 
-st.subheader("📦 Enter Cargo Information")
+# ----------------------------
+# Input Section
+# ----------------------------
+st.markdown("### 📀 Enter Cargo Details")
+col1, col2 = st.columns(2)
 
-length = st.number_input("Cargo Length (m)", value=2.0)
-width = st.number_input("Cargo Width (m)", value=1.5)
-height = st.number_input("Cargo Height (m)", value=1.2)
-weight = st.number_input("Cargo Weight (tons)", value=0.5)
-quantity = st.number_input("Quantity of Cargo Units", value=10, step=1)
-distance_km = st.number_input("Transport Distance (km)", value=500)
-cargo_type = st.selectbox("Cargo Type", [
-    "Standard Steel Fabrication", "Precision Instrument", "Glass Equipment",
-    "Control Panel", "Pipeline", "Rotating Machinery", "Fragile Custom Assembly"
-])
+with col1:
+    length = st.number_input("Cargo Length (m)", value=2.0)
+    width = st.number_input("Cargo Width (m)", value=1.5)
+    height = st.number_input("Cargo Height (m)", value=1.2)
 
-layout_pref = st.radio("📐 Choose Layout Preference", ["Vertical Form", "Side-by-Side Form"])
+with col2:
+    weight = st.number_input("Cargo Weight (tons)", value=0.5)
+    quantity = st.number_input("Quantity of Cargo Units", value=10, step=1)
+    distance_km = st.number_input("Transport Distance (km)", value=500)
 
+cargo_type = st.selectbox("Cargo Type", list(fragile_items.keys()) + ["Standard Steel Fabrication", "Pipeline"])
+
+# ----------------------------
+# Output Recommendation
+# ----------------------------
 if st.button("🔍 Recommend Vehicle"):
     results = compute_best_vehicle(length, width, height, weight, quantity, distance_km)
     if not results:
@@ -132,9 +138,15 @@ if st.button("🔍 Recommend Vehicle"):
         ).properties(height=400)
         st.altair_chart(chart, use_container_width=True)
 
+# ----------------------------
+# All Vehicles Table
+# ----------------------------
 with st.expander("📋 View All Vehicle Types"):
     st.dataframe(pd.DataFrame(vehicle_types))
 
+# ----------------------------
+# Sidebar
+# ----------------------------
 with st.sidebar:
     st.image(
         "https://github.com/Pushkindugam/Artson-Vehicle-Selector/blob/main/artson_logo.png?raw=true",
@@ -149,12 +161,6 @@ with st.sidebar:
     - Max Width: 2.6 m  
     - Max Height: 3.8 m  
     - Max Weight: 40 t
-    """)
-    st.markdown("### 🧠 Notes")
-    st.markdown("""
-    - For cargo exceeding limits, special route permissions may be required.
-    - Always verify packaging recommendations for fragile cargo types.
-    - This tool is a guideline — please confirm with transport authorities and logistics partners.
     """)
 
 
