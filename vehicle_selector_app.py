@@ -93,7 +93,7 @@ def compute_best_vehicle(length, width, height, weight, quantity, distance_km, a
 # ----------------------------
 # Streamlit App Starts
 # ----------------------------
-st.set_page_config(page_title="Vehicle Selector – Artson", layout="wide")
+st.set_page_config(page_title="Vehicle Selector – Artson", layout="centered")
 st.title("🚛 Vehicle Recommendation Tool – Artson Logistics")
 st.caption("Built for SCM use-cases. Made by Pushkin Dugam.")
 st.markdown("---")
