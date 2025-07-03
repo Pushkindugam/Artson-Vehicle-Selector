@@ -60,6 +60,10 @@ def compute_best_vehicle(length, width, height, weight, quantity, distance_km, a
     for v in vehicle_types:
         if not v["has_sidewalls"] and cargo_type in fragile_items:
             continue
+        
+        # Skip if cargo does not physically fit
+        if length > v["max_length"] or width > v["max_width"] or height > v["max_height"] or weight > v["max_weight"]:
+            continue
 
         cap_vol = v["max_length"] * v["max_width"] * v["max_height"]
         max_units_vol = math.floor(cap_vol / volume) if volume > 0 else quantity
