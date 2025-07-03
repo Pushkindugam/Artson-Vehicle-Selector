@@ -1,127 +1,167 @@
 import streamlit as st
 import pandas as pd
+import altair as alt
 import math
 
-st.set_page_config(layout="wide")
-
-# ---------------------- VEHICLE TYPES ----------------------
+# ----------------------------
+# Vehicle master data
+# ----------------------------
 vehicle_types = [
-    {"name": "LCV Truck", "max_length": 4.2, "max_width": 2.0, "max_height": 2.2, "max_weight": 3, "cost_per_km": 20, "cost_per_tkm": 6, "is_enclosed": True},
-    {"name": "14 ft Truck", "max_length": 6, "max_width": 2.5, "max_height": 2.5, "max_weight": 10, "cost_per_km": 30, "cost_per_tkm": 5, "is_enclosed": True},
-    {"name": "22 ft Truck", "max_length": 12, "max_width": 2.6, "max_height": 3, "max_weight": 20, "cost_per_km": 40, "cost_per_tkm": 4.5, "is_enclosed": True},
-    {"name": "Flatbed Trailer (40 ft)", "max_length": 18, "max_width": 2.6, "max_height": 3.5, "max_weight": 30, "cost_per_km": 60, "cost_per_tkm": 4, "is_enclosed": False},
-    {"name": "Flatbed Trailer (60 ft)", "max_length": 25, "max_width": 2.6, "max_height": 3.5, "max_weight": 35, "cost_per_km": 70, "cost_per_tkm": 3.5, "is_enclosed": False},
-    {"name": "Semi Low Bed", "max_length": 18, "max_width": 3.0, "max_height": 3.5, "max_weight": 40, "cost_per_km": 80, "cost_per_tkm": 3, "is_enclosed": False},
-    {"name": "Low Bed Trailer", "max_length": 18, "max_width": 3.5, "max_height": 4.2, "max_weight": 80, "cost_per_km": 100, "cost_per_tkm": 2.5, "is_enclosed": False},
-    {"name": "Multi-Axle Modular Trailer", "max_length": 30, "max_width": 5.0, "max_height": 5.5, "max_weight": 500, "cost_per_km": 200, "cost_per_tkm": 1.8, "is_enclosed": False},
-    {"name": "Container Trailer (40 ft)", "max_length": 12.2, "max_width": 2.6, "max_height": 2.9, "max_weight": 28, "cost_per_km": 45, "cost_per_tkm": 4, "is_enclosed": True},
-    {"name": "Tanker Truck", "max_length": 12, "max_width": 2.5, "max_height": 3.0, "max_weight": 25, "cost_per_km": 50, "cost_per_tkm": 3.8, "is_enclosed": True}
+    {"name": "LCV Truck", "max_length": 4.2, "max_width": 2.0, "max_height": 2.2, "max_weight": 3, "cost_per_km": 20, "cost_per_tkm": 6, "enclosed": True},
+    {"name": "14 ft Truck", "max_length": 6, "max_width": 2.5, "max_height": 2.5, "max_weight": 10, "cost_per_km": 30, "cost_per_tkm": 5, "enclosed": True},
+    {"name": "22 ft Truck", "max_length": 12, "max_width": 2.6, "max_height": 3, "max_weight": 20, "cost_per_km": 40, "cost_per_tkm": 4.5, "enclosed": True},
+    {"name": "Flatbed Trailer (40 ft)", "max_length": 18, "max_width": 2.6, "max_height": 3.5, "max_weight": 30, "cost_per_km": 60, "cost_per_tkm": 4, "enclosed": False},
+    {"name": "Flatbed Trailer (60 ft)", "max_length": 25, "max_width": 2.6, "max_height": 3.5, "max_weight": 35, "cost_per_km": 70, "cost_per_tkm": 3.5, "enclosed": False},
+    {"name": "Semi Low Bed", "max_length": 18, "max_width": 3.0, "max_height": 3.5, "max_weight": 40, "cost_per_km": 80, "cost_per_tkm": 3, "enclosed": False},
+    {"name": "Low Bed Trailer", "max_length": 18, "max_width": 3.5, "max_height": 4.2, "max_weight": 80, "cost_per_km": 100, "cost_per_tkm": 2.5, "enclosed": False},
+    {"name": "Multi-Axle Modular Trailer", "max_length": 30, "max_width": 5.0, "max_height": 5.5, "max_weight": 500, "cost_per_km": 200, "cost_per_tkm": 1.8, "enclosed": False},
+    {"name": "Container Trailer (40 ft)", "max_length": 12.2, "max_width": 2.6, "max_height": 2.9, "max_weight": 28, "cost_per_km": 45, "cost_per_tkm": 4, "enclosed": True},
+    {"name": "Tanker Truck", "max_length": 12, "max_width": 2.5, "max_height": 3.0, "max_weight": 25, "cost_per_km": 50, "cost_per_tkm": 3.8, "enclosed": True}
 ]
 
-# ---------------------- CARGO TYPES ----------------------
+ODC_LIMITS = {"length": 12.0, "width": 2.6, "height": 3.8, "weight": 40}
+
 fragile_items = {
-    "Glass Equipment": "Use enclosed vehicle with padding",
-    "Control Panel": "Side-walled or container vehicle recommended",
-    "Precision Instrument": "Container with shock absorbers",
-    "Fragile Custom Assembly": "Special packaging and container required"
+    "Precision Instrument": "Bubble Wrap + Custom Crating",
+    "Glass Equipment": "Wooden Crate + Shock Absorbers",
+    "Control Panel": "Shrink Wrap + Cushioning",
+    "Rotating Machinery": "Custom Industrial Packing",
+    "Fragile Custom Assembly": "Bubble Wrap + Wooden Crate"
 }
 
-# ---------------------- ODC CHECK ----------------------
-def check_odc(length, width, height, weight):
-    odc = {}
-    if length > 12.0:
-        odc["Length"] = f"{length} m > 12.0 m standard limit"
-    if width > 2.6:
-        odc["Width"] = f"{width} m > 2.6 m standard limit"
-    if height > 3.8:
-        odc["Height"] = f"{height} m > 3.8 m standard limit"
-    if weight > 40.0:
-        odc["Weight"] = f"{weight} tons > 40 tons standard limit"
-    return odc
-
-# ---------------------- VEHICLE SELECTION ----------------------
 def classify_vehicle(name):
-    if "Trailer" in name:
-        return "Trailer"
-    elif "LCV" in name:
-        return "LCV"
-    elif "ft" in name:
-        return "Medium Truck"
+    if "LCV" in name or "14 ft" in name:
+        return "🟢 Light Commercial"
+    elif "22 ft" in name or "Container" in name or "Tanker" in name:
+        return "🟡 Medium Duty"
+    elif "Flatbed" in name or "Low Bed" in name:
+        return "🟠 Heavy Duty"
+    elif "Multi-Axle" in name:
+        return "🔴 Oversize Modular"
     else:
-        return "Heavy Vehicle"
+        return "🔧 Custom Haulage"
+
+def check_odc(length, width, height, weight):
+    exceeded = {}
+    if length > ODC_LIMITS["length"]:
+        exceeded["Length"] = f"📏 {length} m > {ODC_LIMITS['length']} m"
+    if width > ODC_LIMITS["width"]:
+        exceeded["Width"] = f"📐 {width} m > {ODC_LIMITS['width']} m"
+    if height > ODC_LIMITS["height"]:
+        exceeded["Height"] = f"📏 {height} m > {ODC_LIMITS['height']} m"
+    if weight > ODC_LIMITS["weight"]:
+        exceeded["Weight"] = f"⚖️ {weight} t > {ODC_LIMITS['weight']} t"
+    return exceeded
 
 def compute_best_vehicle(length, width, height, weight, quantity, distance_km, cargo_type):
     volume = length * width * height
     total_weight = weight * quantity
-    requires_enclosure = cargo_type in fragile_items
     results = []
 
     for v in vehicle_types:
-        if requires_enclosure and not v["is_enclosed"]:
+        if cargo_type in fragile_items and not v.get("enclosed", True):
             continue
+
         cap_vol = v["max_length"] * v["max_width"] * v["max_height"]
         max_units_vol = math.floor(cap_vol / volume)
         max_units_wt = math.floor(v["max_weight"] / weight) if weight > 0 else quantity
         max_units = min(max_units_vol, max_units_wt)
+
         if max_units == 0:
             continue
 
         trucks_needed = math.ceil(quantity / max_units)
-        total_cost = trucks_needed * (
-            v["cost_per_km"] * distance_km + v["cost_per_tkm"] * (total_weight / trucks_needed) * distance_km
-        )
+        cost_per_truck = v["cost_per_km"] * distance_km + v["cost_per_tkm"] * (total_weight / trucks_needed) * distance_km
+        total_cost = trucks_needed * cost_per_truck
 
         results.append({
             "vehicle": v["name"],
             "class": classify_vehicle(v["name"]),
             "num_trucks": trucks_needed,
             "total_cost": round(total_cost, 2),
-            "max_units_per_truck": max_units
+            "max_units_per_truck": max_units,
+            "enclosed": v["enclosed"]
         })
 
     return sorted(results, key=lambda x: x["total_cost"])
 
-# ---------------------- UI ----------------------
-st.title("🚛 Transport Vehicle & Cost Estimator")
+# ----------------------------
+# Streamlit App Starts
+# ----------------------------
+st.set_page_config(page_title="Vehicle Selector – Artson", layout="centered")
+st.title("🚛 Vehicle Recommendation Tool – Artson Logistics")
+st.caption("Built for SCM use-cases. Made by Pushkin Dugam.")
 
-col1, col2 = st.columns(2)
+st.header("📦 Enter Cargo Details")
+length = st.number_input("Cargo Length (m)", value=2.0)
+width = st.number_input("Cargo Width (m)", value=1.5)
+height = st.number_input("Cargo Height (m)", value=1.2)
+weight = st.number_input("Cargo Weight (tons)", value=0.5)
+quantity = st.number_input("Quantity of Cargo Units", value=10, step=1)
+distance_km = st.number_input("Transport Distance (km)", value=500)
+cargo_type = st.selectbox("Cargo Type", [
+    "Standard Steel Fabrication", "Precision Instrument", "Glass Equipment",
+    "Control Panel", "Pipeline", "Rotating Machinery", "Fragile Custom Assembly"
+])
 
-with col1:
-    cargo_type = st.selectbox("Select Cargo Type", ["Standard Cargo", "Glass Equipment", "Control Panel", "Precision Instrument", "Fragile Custom Assembly"])
-    length = st.number_input("Length per Unit (m)", value=2.0, min_value=0.1)
-    width = st.number_input("Width per Unit (m)", value=1.0, min_value=0.1)
-    height = st.number_input("Height per Unit (m)", value=1.0, min_value=0.1)
+if st.button("🔍 Recommend Vehicle"):
+    results = compute_best_vehicle(length, width, height, weight, quantity, distance_km, cargo_type)
+    if not results:
+        st.error("❌ No suitable vehicle found for this cargo type and dimensions.")
+    else:
+        best = results[0]
+        st.success(f"✅ **Recommended Vehicle:** {best['vehicle']}")
+        st.markdown(f"**Class:** {best['class']}")
+        st.markdown(f"**Number of Trucks Required:** {best['num_trucks']}")
+        st.markdown(f"**Estimated Transport Cost:** ₹ {best['total_cost']}")
+        st.markdown(f"**Max Units per Truck:** {best['max_units_per_truck']}")
 
-with col2:
-    weight = st.number_input("Weight per Unit (tons)", value=0.5, min_value=0.01)
-    quantity = st.number_input("Quantity of Units", value=10, min_value=1, step=1)
-    distance_km = st.number_input("Distance to Transport (km)", value=100, min_value=1, step=1)
+        # 2. ODC Alert
+        odc_exceeded = check_odc(length, width, height, weight)
+        if odc_exceeded:
+            st.warning("⚠️ **ODC Alert:** This cargo exceeds standard transport limits and qualifies as **Over Dimensional Cargo (ODC)**.")
+            st.markdown("### ❌ Dimensions Exceeding Limits:")
+            for key, msg in odc_exceeded.items():
+                st.markdown(f"- **{key}**: {msg}")
+            st.markdown("🔧 Please arrange for **special permits**, route clearance, and escort vehicles.")
+        else:
+            st.info("📦 This cargo is **within standard CMVR transport limits** and does **not** qualify as ODC.")
 
-# 1. Fragility Note
-if cargo_type in fragile_items:
-    st.info(f"📦 Fragile Cargo – Suggested Packaging: **{fragile_items[cargo_type]}**")
+        # 3. Fragile Packaging Info
+        if cargo_type in fragile_items:
+            st.info(f"📦 Fragile Cargo – Suggested Packaging: **{fragile_items[cargo_type]}**")
 
-# 2. ODC Alert
-odc_exceeded = check_odc(length, width, height, weight)
-if odc_exceeded:
-    st.warning("⚠️ **ODC Alert:** This cargo exceeds standard transport limits and qualifies as **Over Dimensional Cargo (ODC)**.")
-    st.markdown("### ❌ Dimensions Exceeding Limits:")
-    for key, msg in odc_exceeded.items():
-        st.markdown(f"- **{key}**: {msg}")
-    st.markdown("🔧 Please arrange for **special permits**, route clearance, and escort vehicles.")
-else:
-    st.info("📦 This cargo is **within standard CMVR transport limits** and does **not** qualify as ODC.")
+        # 4. Chart
+        st.subheader("📊 Cost Comparison by Vehicle Type")
+        df = pd.DataFrame(results)
+        chart = alt.Chart(df).mark_bar().encode(
+            y=alt.Y("vehicle:N", title="Vehicle Type", sort="-x"),
+            x=alt.X("total_cost:Q", title="Estimated Cost ₹"),
+            color="class:N",
+            tooltip=["vehicle", "total_cost", "num_trucks"]
+        ).properties(height=400)
+        st.altair_chart(chart, use_container_width=True)
 
-# 3. Recommendation
-st.markdown("---")
-results = compute_best_vehicle(length, width, height, weight, quantity, distance_km, cargo_type)
+# Expandable view
+with st.expander("📋 View All Vehicle Types"):
+    st.dataframe(pd.DataFrame(vehicle_types))
 
-if results:
-    st.subheader("🚚 Recommended Transport Options")
-    for r in results[:3]:
-        st.success(f"✅ {r['vehicle']} – {r['num_trucks']} Required – ₹ {r['total_cost']} – Max Units/Truck: {r['max_units_per_truck']}")
-else:
-    st.error("❌ No suitable vehicle found. Try adjusting cargo size or check for special transport options.")
+# Sidebar
+with st.sidebar:
+    st.image(
+        "https://github.com/Pushkindugam/Artson-Vehicle-Selector/blob/main/artson_logo.png?raw=true",
+        use_container_width=True,
+    )
+    st.markdown("## 🔧 Artson SCM Tool")
+    st.markdown("- Built by **Pushkin Dugam**")
+    st.markdown("[🔗 GitHub Repository](https://github.com/Pushkindugam/Artson-Vehicle-Selector)")
+    st.markdown("### 🚨 ODC Rules")
+    st.markdown("""
+    - Max Length: 12.0 m  
+    - Max Width: 2.6 m  
+    - Max Height: 3.8 m  
+    - Max Weight: 40 t
+    """)
 
 
 
